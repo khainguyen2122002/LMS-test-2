@@ -19,6 +19,8 @@ const NAV_LINKS = [
   { label: 'Thư viện',  href: '/library', activeOn: ['/library'] },
 ]
 
+import { UserDropdown } from '@/components/layout/UserDropdown'
+
 export const TopNavbar: React.FC<TopNavbarProps> = ({ content }) => {
   const pathname = usePathname()
   const { unreadCount } = useNotifications()
@@ -40,7 +42,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ content }) => {
                 className={`pb-1 text-sm font-medium transition-colors ${
                   isActive
                     ? 'text-emerald-400 dark:text-emerald-400 border-b-2 border-emerald-400'
-                    : 'dark:text-neutral-400 light:text-neutral-500 dark:dark:text-neutral-400 light:text-neutral-500 light:text-neutral-500 hover:text-neutral-100 dark:hover:text-neutral-100 light:hover:text-neutral-800'
+                    : 'dark:text-neutral-400 light:text-neutral-500 hover:text-neutral-100 dark:hover:text-neutral-100 light:hover:text-neutral-800'
                 }`}
               >
                 {link.label}
@@ -58,7 +60,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ content }) => {
           <input
             type="text"
             placeholder={content.searchPlaceholder}
-            className="dark:bg-[#1c1b1b] light:bg-white dark:dark:bg-[#1c1b1b] light:bg-white light:bg-neutral-100 border-none rounded-full py-2 pl-10 pr-4 text-sm dark:dark:text-white light:text-neutral-900 light:text-neutral-900 w-64 focus:ring-1 focus:ring-emerald-500/50 transition-all dark:placeholder:text-neutral-600 light:placeholder:dark:text-neutral-400 light:text-neutral-500 outline-none"
+            className="dark:bg-[#1c1b1b] light:bg-neutral-100 border-none rounded-full py-2 pl-10 pr-4 text-sm dark:text-white light:text-neutral-900 w-64 focus:ring-1 focus:ring-emerald-500/50 transition-all dark:placeholder:text-neutral-600 light:placeholder:text-neutral-400 outline-none"
           />
         </div>
 
@@ -87,10 +89,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ content }) => {
             <NotificationDropdown open={notifOpen} onClose={closeNotif} />
           </div>
 
-          {/* Avatar */}
-          <div className="w-8 h-8 rounded-full bg-emerald-900 flex items-center justify-center text-xs font-bold text-emerald-400 border border-emerald-400/20 cursor-pointer hover:border-emerald-400/40 transition-colors">
-            K
-          </div>
+          <UserDropdown />
         </div>
       </div>
     </header>

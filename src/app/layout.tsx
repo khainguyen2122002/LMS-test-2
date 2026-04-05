@@ -17,33 +17,24 @@ export const metadata: Metadata = {
   description: "Hệ thống quản trị năng lực và phát triển nhân sự toàn diện",
 };
 
+import { AuthProvider } from '@/components/auth/AuthProvider'
+import { LayoutWrapper } from '@/components/layout/LayoutWrapper'
+
 // Inner layout that uses client-side providers
 function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <SettingsProvider>
-      <ThemeProvider>
-        <NotificationProvider>
-          <MaintenanceBanner />
-          <div className="flex min-h-screen" style={{ background: 'var(--background)' }}>
-            {/* Fixed Sidebar - 260px */}
-            <Sidebar content={dashboardContent.sidebar} />
-
-            {/* Main area - shifts right by sidebar width */}
-            <div className="flex-1 ml-[260px]">
-              {/* Fixed Top Navbar */}
-              <TopNavbar content={dashboardContent.topNav} />
-
-              {/* Scrollable Main Content */}
-              <main className="pt-16 pb-12">
-                <div className="max-w-[1400px] mx-auto px-8">
-                  {children}
-                </div>
-              </main>
-            </div>
-          </div>
-          <Toaster position="bottom-right" richColors theme="system" />
-        </NotificationProvider>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          <NotificationProvider>
+            <MaintenanceBanner />
+            <LayoutWrapper sidebarContent={dashboardContent.sidebar} topNavContent={dashboardContent.topNav}>
+              {children}
+            </LayoutWrapper>
+            <Toaster position="bottom-right" richColors theme="system" />
+          </NotificationProvider>
+        </ThemeProvider>
+      </AuthProvider>
     </SettingsProvider>
   );
 }
@@ -56,6 +47,7 @@ export default function RootLayout({
       <head>
         {/* Inline script prevents flash of wrong theme before React hydrates */}
         <ThemeScript />
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
       </head>
       <body className={`${inter.variable} antialiased`} style={{ color: 'var(--foreground)', background: 'var(--background)' }}>
         <AppShell>{children}</AppShell>
