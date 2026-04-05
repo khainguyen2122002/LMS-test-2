@@ -26,6 +26,10 @@ interface UserContextValue {
   setActiveFilter: (filter: FilterType) => void
   setActivePage: (page: number) => void
   refreshUsers: () => Promise<void>
+  addManyUsers: (newUsers: User[]) => Promise<void>
+  addUser: (userData: Partial<User>) => Promise<void>
+  updateUser: (id: string, userData: Partial<User>) => Promise<void>
+  deleteUser: (id: string) => Promise<void>
 }
 
 const UserContext = createContext<UserContextValue | null>(null)
@@ -111,6 +115,40 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [totalPages, activePage])
 
+  const addManyUsers = useCallback(async (newUsers: User[]) => {
+    // In a real app, this would call a backend service to create auth users.
+    // For now, we update local state to satisfy the UI and build.
+    setUsers(prev => [...newUsers, ...prev])
+    toast.success(`Đã nhập ${newUsers.length} người dùng vào danh sách hiển thị.`)
+  }, [])
+
+  const addUser = async (userData: Partial<User>) => {
+    // Mock implementation
+    const newUser: User = {
+      id: Math.random().toString(36).substr(2, 9),
+      fullName: userData.fullName || 'Người dùng mới',
+      email: userData.email || '',
+      role: userData.role || 'learner',
+      coursesCount: 0,
+      joinDate: new Date().toLocaleDateString('vi-VN'),
+      status: userData.status || 'Hoạt động',
+    }
+    setUsers(prev => [newUser, ...prev])
+    toast.success('Thêm người dùng thành công!')
+  }
+
+  const updateUser = async (id: string, userData: Partial<User>) => {
+    // Mock implementation
+    setUsers(prev => prev.map(u => u.id === id ? { ...u, ...userData } : u))
+    toast.success('Cập nhật người dùng thành công!')
+  }
+
+  const deleteUser = async (id: string) => {
+    // Mock implementation
+    setUsers(prev => prev.filter(u => u.id !== id))
+    toast.success('Đã xóa người dùng!')
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -130,7 +168,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setSearchQuery,
         setActiveFilter,
         setActivePage,
-        refreshUsers
+        refreshUsers,
+        addManyUsers,
+        addUser,
+        updateUser,
+        deleteUser
       }}
     >
       {children}

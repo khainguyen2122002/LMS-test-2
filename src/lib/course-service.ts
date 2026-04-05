@@ -109,3 +109,32 @@ export async function getCourseDetails(courseId: string) {
     lessons: lessons || []
   }
 }
+
+/**
+ * Tạo một khóa học mới
+ */
+export async function createCourse(courseData: Partial<Course>) {
+  // Lấy ID người dùng hiện tại để làm instructor_id
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Bạn cần đăng nhập để tạo khóa học')
+
+  const { data, error } = await supabase
+    .from('courses')
+    .insert({
+      title: courseData.title,
+      description: courseData.description,
+      image_url: courseData.thumbnail,
+      price: courseData.is_free ? 0 : (courseData.price || 0),
+      instructor_id: user.id,
+      category: courseData.category,
+      is_published: courseData.is_published,
+    })
+    .select()
+
+  if (error) {
+    console.error('Lỗi khi tạo khóa học:', error)
+    throw error
+  }
+
+  return data[0]
+}

@@ -1,7 +1,7 @@
 "use client"
 
 import React, { createContext, useContext, useState, useMemo, useCallback, useEffect } from 'react'
-import { Course, getAllCourses } from '@/lib/course-service'
+import { Course, getAllCourses, createCourse } from '@/lib/course-service'
 import { toast } from 'sonner'
 
 export type CourseCategory = 'Tất cả' | 'Quản trị nhân sự' | 'Tuyển dụng' | 'Đào tạo & Phát triển' | 'Văn hóa doanh nghiệp' | 'Kỹ năng mềm'
@@ -16,6 +16,7 @@ interface CourseContextValue {
   setSearchQuery: (query: string) => void
   setActiveCategory: (category: CourseCategory) => void
   refreshCourses: () => Promise<void>
+  addCourse: (courseData: Partial<Course>) => Promise<void>
 }
 
 const CourseContext = createContext<CourseContextValue | null>(null)
@@ -42,6 +43,16 @@ export const CourseProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   useEffect(() => {
     refreshCourses()
   }, [refreshCourses])
+
+  const addCourse = async (courseData: Partial<Course>) => {
+    try {
+      await createCourse(courseData)
+      toast.success('Tạo khóa học thành công!')
+      await refreshCourses()
+    } catch (error: any) {
+      toast.error('Lỗi khi tạo khóa học: ' + error.message)
+    }
+  }
 
   // Real-time computation of filtered courses
   const filteredCourses = useMemo(() => {
@@ -74,7 +85,8 @@ export const CourseProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         filteredCourses,
         setSearchQuery,
         setActiveCategory,
-        refreshCourses
+        refreshCourses,
+        addCourse
       }}
     >
       {children}

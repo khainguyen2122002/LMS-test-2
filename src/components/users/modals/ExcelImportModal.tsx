@@ -60,9 +60,16 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
           
           const fullName = row[0]
           const email = row[1]
-          const role = row[2] as UserRole
+          const roleRaw = row[2] as string
           const status = row[3] as UserStatus
 
+          const roleMap: Record<string, UserRole> = {
+            'Học viên': 'learner',
+            'Giảng viên': 'instructor',
+            'Admin': 'admin'
+          }
+          const role = roleMap[roleRaw] || 'learner'
+          
           if (!fullName || !email) {
             errors++
             return
@@ -71,7 +78,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
           newUsers.push({
             fullName,
             email,
-            role: ['Học viên', 'Giảng viên', 'Admin'].includes(role) ? role : 'Học viên',
+            role,
             status: ['Hoạt động', 'Ngừng hoạt động'].includes(status) ? status : 'Hoạt động',
             joinDate: new Date().toLocaleDateString('vi-VN'),
             coursesCount: 0

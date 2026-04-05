@@ -16,7 +16,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, u
   
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
-  const [role, setRole] = useState<UserRole>('Học viên')
+  const [role, setRole] = useState<UserRole>('learner')
   const [status, setStatus] = useState<UserStatus>('Hoạt động')
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, u
     } else {
       setFullName('')
       setEmail('')
-      setRole('Học viên')
+      setRole('learner')
       setStatus('Hoạt động')
     }
   }, [userToEdit, isOpen])
@@ -93,9 +93,9 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, u
                 onChange={(e) => setRole(e.target.value as UserRole)}
                 className="w-full bg-[var(--input-bg)] border-none rounded-xl py-2.5 px-4 dark:text-white light:text-neutral-900 focus:ring-2 focus:ring-emerald-500/50 transition-all outline-none appearance-none"
               >
-                <option value="Học viên">Học viên</option>
-                <option value="Giảng viên">Giảng viên</option>
-                <option value="Admin">Admin</option>
+                <option value="learner">Học viên</option>
+                <option value="instructor">Giảng viên</option>
+                <option value="admin">Admin</option>
               </select>
             </div>
 
