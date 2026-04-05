@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Lesson | Inspiring HR</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#ffb957",
+                    "secondary": "#4f6353",
+                    "surface-dim": "#d9dbd6",
+                    "primary": "#1B4D2E",
+                    "on-primary": "#ffffff",
+                    "primary-container": "#1b4d2e",
+                    "on-surface-variant": "#414942",
+                    "outline-variant": "#c1c9bf",
+                    "surface-container-high": "#e7e9e4",
+                    "surface-container-low": "#f3f4ef",
+                    "surface-container-lowest": "#ffffff",
+                    "surface": "#f9faf5",
+                    "on-tertiary-container": "#f0a01b",
+                    "on-tertiary": "#ffffff",
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-tab-indicator {
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #f0a01b;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-tertiary-fixed-dim selection:text-on-tertiary-fixed">
+<!-- Top Navigation Bar -->
+<header class="bg-[#f9faf5] dark:bg-[#191c19] w-full h-16 border-b border-[#c1c9bf]/20 sticky top-0 z-50">
+    <div class="flex justify-between items-center px-8 w-full max-w-screen-2xl mx-auto h-full">
+        <div class="text-xl font-black text-[#1B4D2E] dark:text-[#ffffff] uppercase tracking-tighter cursor-pointer" onclick="window.location.href='/'">
+            Inspiring HR
+        </div>
+        <nav class="hidden md:flex gap-8 items-center font-['Inter'] font-semibold tracking-tight">
+            <a class="text-[#191c19]/60 dark:text-[#f3f4ef]/60 hover:text-[#1B4D2E] transition-colors duration-200" href="/" data-i18n="nav_home">Home</a>
+            <a class="text-[#1B4D2E] dark:text-[#ffffff] border-b-2 border-[#f0a01b] pb-1" href="#" data-i18n="nav_courses">Courses</a>
+        </nav>
+        <div class="flex items-center gap-4" id="user-header-info">
+            <!-- Dynamic User Loading -->
+        </div>
+    </div>
+</header>
+
+<main class="max-w-screen-2xl mx-auto px-8 py-8">
+    <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Video & Tabs Column -->
+        <div class="flex-1 space-y-8">
+            <!-- Video Section -->
+            <div class="relative aspect-video rounded-xl overflow-hidden bg-on-background shadow-2xl group" id="video-container">
+                <!-- YouTube Iframe injected here -->
+                <div class="absolute inset-0 flex items-center justify-center bg-black/40">
+                    <span class="text-white font-bold" data-i18n="loading_video">Đang tải video...</span>
+                </div>
+            </div>
+            
+            <!-- Lesson Info -->
+            <div>
+                <h1 id="lesson-title" class="text-3xl font-bold tracking-tight text-primary mb-2">Đang tải nội dung...</h1>
+                <div class="flex items-center gap-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest" id="lesson-meta">
+                    <!-- Date/Duration etc -->
+                </div>
+            </div>
+
+            <!-- Tabs Section -->
+            <div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+                <div class="flex gap-12 border-b border-outline-variant/20 mb-8 relative">
+                    <button class="tab-btn relative pb-4 text-[#1B4D2E] font-bold text-lg active" data-tab="content">
+                        Nội dung
+                        <div class="active-tab-indicator hidden group-[.active]:block"></div>
+                    </button>
+                    <button class="tab-btn relative pb-4 text-on-surface-variant font-medium text-lg hover:text-primary transition-colors" data-tab="resources">
+                        Tài liệu
+                    </button>
+                    <button class="tab-btn relative pb-4 text-on-surface-variant font-medium text-lg hover:text-primary transition-colors student-only" data-tab="assignment">
+                        Nộp bài
+                    </button>
+                    <button class="tab-btn relative pb-4 text-accent font-bold text-lg hover:opacity-80 transition-opacity admin-instructor-only hidden" data-tab="edit">
+                        Chỉnh sửa
+                    </button>
+                </div>
+
+                <!-- Tab Panels -->
+                <div id="tab-panels">
+                    <!-- Nội dung -->
+                    <div class="tab-panel prose max-w-none text-on-surface-variant leading-relaxed" id="panel-content">
+                        <div id="lesson-content">Đang tải mô tả bài học...</div>
+                    </div>
+
+                    <!-- Tài liệu -->
+                    <div class="tab-panel hidden" id="panel-resources">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="resource-list">
+                            <p class="text-sm italic opacity-50">Không có tài liệu nào cho bài học này.</p>
+                        </div>
+                    </div>
+
+                    <!-- Nộp bài (Sinh viên) -->
+                    <div class="tab-panel hidden" id="panel-assignment">
+                        <div id="assignment-mount-point" class="animate-pulse">
+                            <p class="text-center py-12 text-on-surface-variant italic">Đang tải bài tập...</p>
+                        </div>
+                    </div>
+
+                    <!-- Chỉnh sửa (Admin/Instructor) -->
+                    <div class="tab-panel hidden" id="panel-edit">
+                        <div class="p-8 rounded-xl bg-surface-container-low space-y-6">
+                            <h3 class="text-xl font-bold text-primary">Công cụ quản trị bài học</h3>
+                            <button class="w-full py-3 bg-white text-primary border border-primary font-bold rounded-xl" onclick="window.location.href='/admin.html'">
+                                Quay lại Admin Dashboard để chỉnh sửa
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Lesson List -->
+        <aside class="w-full lg:w-96 space-y-6">
+            <div class="bg-surface-container-low rounded-xl overflow-hidden">
+                <div class="p-6 bg-primary text-on-primary">
+                    <h2 class="text-xl font-bold font-headline" id="course-title">Đang tải...</h2>
+                    <div class="flex items-center gap-2 mt-2 opacity-80">
+                        <div class="flex-1 h-2 bg-white/20 rounded-full overflow-hidden">
+                            <div class="h-full bg-tertiary-fixed-dim" id="progress-bar" style="width: 0%"></div>
+                        </div>
+                        <span class="text-xs font-bold uppercase tracking-wider" id="progress-text">0% Hoàn thành</span>
+                    </div>
+                </div>
+                <div class="p-2 flex flex-col" id="lesson-sidebar-list">
+                    <!-- Sidebar Items Injected here -->
+                </div>
+            </div>
+
+            <!-- Instructor Card -->
+            <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10" id="instructor-card">
+                <!-- Instructor Injected here -->
+            </div>
+        </aside>
+    </div>
+</main>
+
+<footer class="bg-[#f3f4ef] dark:bg-[#191c19] w-full py-12 px-8 border-t border-[#c1c9bf]/20 mt-12">
+    <div class="w-full max-w-screen-2xl mx-auto flex flex-col md:flex-row justify-between items-start font-['Inter'] text-xs leading-6">
+        <div class="mb-8 md:mb-0">
+            <div class="text-lg font-bold text-[#1B4D2E] mb-2 uppercase">Inspiring HR</div>
+            <p class="text-[#191c19]/50 dark:text-[#f3f4ef]/50">© 2024 Inspiring HR. Empowering through education.</p>
+        </div>
+    </div>
+</footer>
+
+<script type="module" src="/src/lesson.js"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html class="light" lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Soạn nội dung | Inspiring HR</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "primary": "#00361a",
+                "on-primary": "#ffffff",
+                "surface": "#f9faf5",
+                "on-surface": "#191c19",
+                "surface-container-low": "#f3f4ef",
+                "surface-container-lowest": "#ffffff",
+                "outline-variant": "#c1c9bf"
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .cta-gradient { background: linear-gradient(135deg, #00361a 0%, #1b4d2e 100%); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface flex min-h-screen">
+    <!-- SideNavBar -->
+    <nav class="fixed left-0 top-0 flex flex-col py-6 h-screen w-64 bg-surface-container-low border-r border-outline-variant/20 z-50">
+        <div class="px-6 mb-8">
+            <h1 class="font-bold text-lg tracking-tight text-primary">Inspiring HR</h1>
+        </div>
+        <div class="flex flex-col gap-1 px-3 flex-grow">
+            <a class="flex items-center gap-4 px-4 py-3 hover:bg-surface-container-lowest transition-all rounded-r-full" href="/admin.html">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span class="text-sm font-medium">Bảng điều khiển</span>
+            </a>
+            <div class="mt-4 px-4 text-[10px] uppercase font-bold text-on-surface-variant tracking-widest mb-2">Công cụ biên soạn</div>
+            <a class="flex items-center gap-4 px-4 py-3 bg-primary text-on-primary rounded-r-full font-bold transition-all" href="#">
+                <span class="material-symbols-outlined">edit_note</span>
+                <span class="text-sm">Soạn bài giảng</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="flex-1 ml-64 p-8">
+        <header class="mb-12 flex justify-between items-center">
+            <div>
+                <h2 class="text-4xl font-black tracking-tighter">Quản lý nội dung học tập</h2>
+                <p class="text-on-surface-variant mt-2">Tạo khóa học, bài giảng và quản lý tài nguyên</p>
+            </div>
+            <div id="theme-switcher-container"></div>
+        </header>
+
+        <div class="grid grid-cols-12 gap-8">
+            <!-- Course & Lesson Form -->
+            <section class="col-span-12 lg:col-span-7 bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10">
+                <h3 class="text-2xl font-bold mb-8">Đăng tải Bài giảng mới</h3>
+                <form id="manage-course-form" class="space-y-6">
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="col-span-2">
+                            <label class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">Chọn Khóa học</label>
+                            <select id="course-select" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary">
+                                <option value="new">+ Tạo khóa học mới...</option>
+                            </select>
+                        </div>
+                        <div id="new-course-input-group" class="col-span-2">
+                            <label class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">Tên Khóa học mới</label>
+                            <input class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary" id="new-course-title" placeholder="Ví dụ: Kỹ năng Lãnh đạo HR" type="text"/>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-outline-variant/10 pt-6">
+                        <label class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">Tiêu đề Bài học</label>
+                        <input class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary" id="lesson-title" placeholder="Nhập tiêu đề bài học..." type="text" required/>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6 text-on-surface">
+                        <div>
+                            <label class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">YouTube Video URL</label>
+                            <input class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary" id="youtube-url" placeholder="https://youtube.com/..." type="url" required/>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">Vị trí bài học (Thứ tự)</label>
+                            <input class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary" id="lesson-position" type="number" value="1"/>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="cta-gradient w-full py-4 text-on-primary font-bold rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all">
+                        Lưu và Đăng bài học
+                    </button>
+                </form>
+            </section>
+
+            <!-- Lesson List / Anti-Edit Preview -->
+            <section class="col-span-12 lg:col-span-5 bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10 leading-relaxed">
+                <h3 class="text-2xl font-bold mb-8">Nội dung của tôi</h3>
+                <div id="my-lessons-list" class="space-y-4">
+                    <p class="text-sm text-on-surface-variant italic">Đang tải danh sách bài giảng...</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script type="module" src="/src/manage-content.js"></script>
+</body>
+</html>
