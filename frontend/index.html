@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html class="light" lang="en">
+
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Inspiring HR - Modern LMS Dashboard</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -51,138 +55,172 @@
         }
     </style>
 </head>
+
 <body class="bg-[#F9FAF5] dark:bg-dark-bg text-on-surface dark:text-gray-300 transition-colors duration-300">
-<header class="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-gray-200 dark:border-dark-border h-16">
-    <div class="flex justify-between items-center px-6 w-full h-full">
-        <div class="flex items-center gap-10">
-            <span class="text-xl font-black text-primary dark:text-accent uppercase tracking-tighter font-headline">Inspiring HR</span>
-            <nav class="hidden md:flex items-center gap-6 font-headline font-semibold tracking-tight text-sm">
-                <a class="text-primary dark:text-white border-b-2 border-accent pb-1" href="/" data-i18n="nav_home">Trang chủ</a>
-                <a class="text-gray-500 hover:text-primary dark:hover:text-white transition-colors" href="#" data-i18n="nav_courses">Khóa học</a>
-                <a class="text-gray-500 hover:text-primary dark:hover:text-white transition-colors" href="#" data-i18n="nav_library">Thư viện</a>
+    <header class="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-gray-200 dark:border-dark-border h-16">
+        <div class="flex justify-between items-center px-6 w-full h-full">
+            <div class="flex items-center gap-10">
+                <span
+                    class="text-xl font-black text-primary dark:text-accent uppercase tracking-tighter font-headline">Inspiring
+                    HR</span>
+                <nav class="hidden md:flex items-center gap-6 font-headline font-semibold tracking-tight text-sm">
+                    <a class="text-primary dark:text-white border-b-2 border-accent pb-1" href="/"
+                        data-i18n="nav_home">Trang chủ</a>
+                    <a class="text-gray-500 hover:text-primary dark:hover:text-white transition-colors" href="#"
+                        data-i18n="nav_courses">Khóa học</a>
+                    <a class="text-gray-500 hover:text-primary dark:hover:text-white transition-colors" href="#"
+                        data-i18n="nav_library">Thư viện</a>
+                </nav>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="hidden md:block relative mr-2">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">search</span>
+                    <input
+                        class="bg-gray-100 dark:bg-dark-card border-none rounded-full py-1.5 pl-10 pr-4 text-xs w-48 focus:ring-2 focus:ring-accent dark:text-white transition-all"
+                        placeholder="Search..." type="text" />
+                </div>
+
+                <div id="auth-header-container" class="flex items-center gap-2"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex pt-16 min-h-screen">
+        <aside
+            class="fixed left-0 top-16 bottom-0 w-64 bg-white dark:bg-dark-bg border-r border-gray-200 dark:border-dark-border py-6 hidden lg:flex flex-col z-40">
+            <nav class="flex-1 flex flex-col gap-1 px-4 text-sm font-medium">
+                <a class="flex items-center gap-3 px-4 py-3 text-primary dark:text-accent bg-gray-50 dark:bg-primary/10 rounded-xl font-bold transition-all"
+                    href="#">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+                    <span data-i18n="nav_dashboard">Bảng điều khiển</span>
+                </a>
+                <a class="admin-only hidden items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card rounded-xl transition-all"
+                    href="/admin.html">
+                    <span class="material-symbols-outlined">group</span>
+                    <span data-i18n="nav_users">User Management</span>
+                </a>
+                <a class="admin-only hidden items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card rounded-xl transition-all"
+                    href="/admin.html">
+                    <span class="material-symbols-outlined">edit_note</span>
+                    <span data-i18n="nav_courses">Course Editor</span>
+                </a>
+                <a class="admin-only hidden items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card rounded-xl transition-all"
+                    href="/admin.html">
+                    <span class="material-symbols-outlined">analytics</span>
+                    <span data-i18n="nav_analytics">Analytics</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card rounded-xl transition-all"
+                    href="#">
+                    <span class="material-symbols-outlined">description</span>
+                    <span>Documents</span>
+                </a>
+                <div class="my-4 border-t border-gray-100 dark:border-dark-border"></div>
+                <a class="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card rounded-xl transition-all"
+                    href="#">
+                    <span class="material-symbols-outlined">settings</span>
+                    <span>Settings</span>
+                </a>
             </nav>
-        </div>
-        <div class="flex items-center gap-4">
-            <div class="hidden md:block relative mr-2">
-                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">search</span>
-                <input class="bg-gray-100 dark:bg-dark-card border-none rounded-full py-1.5 pl-10 pr-4 text-xs w-48 focus:ring-2 focus:ring-accent dark:text-white transition-all" placeholder="Search..." type="text"/>
+        </aside>
+
+        <main class="flex-1 lg:ml-64 bg-gray-50 dark:bg-dark-bg px-6 py-8">
+            <div class="max-w-7xl mx-auto space-y-6">
+                <!-- Hero Section -->
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div
+                        class="flex-1 relative rounded-3xl overflow-hidden min-h-[240px] flex items-center p-10 editorial-gradient dark:border dark:border-primary">
+                        <div class="absolute inset-0 opacity-20 mix-blend-overlay">
+                            <img alt="Background" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCx-s0YqP8g9C5d34MxWz9MIw579M7EDYidYzOfRfcAECHtrLfrLehOWfWPfYNTBIZAoWNmAJlzY9jTNXZA-hz1KmNEgC8O5GiYlt5l46ryaFmiEbnKT95gT5fdSVcaLciDk8Jc12z791Hu5zdJ4ZWqZpCwpL-YGZHvxw6nOmcZlR7Chx6ZA1YKpVMHyHlWlk9_baKizIMq3HGoJ1DFhkvFi8P-A3SeXaAagyuwOdlN2wIjZrZ_htxnLObDdZYNBA1rIHnIkVg1HJk" />
+                        </div>
+                        <div class="relative z-10 max-w-xl">
+                            <span
+                                class="text-accent bg-black/20 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase mb-4 inline-block">Institutional
+                                Control</span>
+                            <h1 class="text-4xl font-black text-white tracking-tighter mb-3 leading-tight"
+                                data-i18n="hero_title">Khởi nguồn tăng trưởng, mỗi ngày.</h1>
+                            <p class="text-white/80 text-sm max-w-md" data-i18n="hero_desc">Quản trị thời gian thực
+                                chuyên biệt cho chuyên gia nhân sự và các đội ngũ xử lý hồ sơ cao cấp.</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:w-72">
+                        <div
+                            class="bg-white dark:bg-dark-card p-5 rounded-3xl border border-gray-100 dark:border-dark-border">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Engagement</span>
+                                <span class="text-accent font-bold text-lg">88%</span>
+                            </div>
+                            <div class="h-1.5 bg-gray-100 dark:bg-dark-bg rounded-full overflow-hidden">
+                                <div class="h-full bg-accent" style="width: 88%;"></div>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white dark:bg-dark-card p-5 rounded-3xl border border-gray-100 dark:border-dark-border">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Active
+                                    Users</span>
+                                <span class="text-primary dark:text-accent font-bold text-lg">1,240</span>
+                            </div>
+                            <div class="flex items-center gap-1 text-[10px] text-green-500 font-bold">
+                                <span class="material-symbols-outlined text-xs">trending_up</span>
+                                <span>+12% this month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Area -->
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <!-- Main Activity -->
+                    <div
+                        class="md:col-span-2 lg:col-span-3 bg-white dark:bg-dark-card p-6 rounded-3xl border border-gray-100 dark:border-dark-border">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-lg font-bold tracking-tight text-primary dark:text-white"
+                                data-i18n="active_curriculums">Giáo trình đang học</h2>
+                            <button class="text-accent text-xs font-bold flex items-center gap-1 hover:underline">
+                                <span data-i18n="all_courses">Tất cả khóa học</span> <span
+                                    class="material-symbols-outlined text-sm">chevron_right</span>
+                            </button>
+                        </div>
+                        <div id="courses-container" class="grid grid-cols-1 gap-3">
+                            <!-- Placeholder Khóa học -->
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Tool -->
+                    <div
+                        class="bg-white dark:bg-dark-card p-6 rounded-3xl border border-gray-100 dark:border-dark-border">
+                        <h3 class="font-bold text-sm text-primary dark:text-white mb-4 uppercase tracking-widest text-[10px]"
+                            data-i18n="workflow_tools">Công cụ quy trình</h3>
+                        <div class="space-y-2">
+                            <button
+                                class="w-full flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-dark-bg hover:bg-primary hover:text-white dark:hover:bg-accent dark:hover:text-black transition-all text-xs font-semibold group">
+                                <span class="material-symbols-outlined text-lg">add_box</span>
+                                <span data-i18n="create_course">Tạo khóa học</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
-            <div id="auth-header-container" class="flex items-center gap-2"></div>
-        </div>
+        </main>
     </div>
-</header>
 
-<div class="flex pt-16 min-h-screen">
-    <aside class="fixed left-0 top-16 bottom-0 w-64 bg-white dark:bg-dark-bg border-r border-gray-200 dark:border-dark-border py-6 hidden lg:flex flex-col z-40">
-        <nav class="flex-1 flex flex-col gap-1 px-4 text-sm font-medium">
-            <a class="flex items-center gap-3 px-4 py-3 text-primary dark:text-accent bg-gray-50 dark:bg-primary/10 rounded-xl font-bold transition-all" href="#">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
-                <span data-i18n="nav_dashboard">Bảng điều khiển</span>
-            </a>
-            <a class="admin-only hidden items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card rounded-xl transition-all" href="/admin.html">
-                <span class="material-symbols-outlined">group</span>
-                <span data-i18n="nav_users">User Management</span>
-            </a>
-            <a class="admin-only hidden items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card rounded-xl transition-all" href="/admin.html">
-                <span class="material-symbols-outlined">edit_note</span>
-                <span data-i18n="nav_courses">Course Editor</span>
-            </a>
-            <a class="admin-only hidden items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card rounded-xl transition-all" href="/admin.html">
-                <span class="material-symbols-outlined">analytics</span>
-                <span data-i18n="nav_analytics">Analytics</span>
-            </a>
-            <a class="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card rounded-xl transition-all" href="#">
-                <span class="material-symbols-outlined">description</span>
-                <span>Documents</span>
-            </a>
-            <div class="my-4 border-t border-gray-100 dark:border-dark-border"></div>
-            <a class="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card rounded-xl transition-all" href="#">
-                <span class="material-symbols-outlined">settings</span>
-                <span>Settings</span>
-            </a>
-        </nav>
-    </aside>
-
-    <main class="flex-1 lg:ml-64 bg-gray-50 dark:bg-dark-bg px-6 py-8">
-        <div class="max-w-7xl mx-auto space-y-6">
-            <!-- Hero Section -->
-            <div class="flex flex-col lg:flex-row gap-6">
-                <div class="flex-1 relative rounded-3xl overflow-hidden min-h-[240px] flex items-center p-10 editorial-gradient dark:border dark:border-primary">
-                    <div class="absolute inset-0 opacity-20 mix-blend-overlay">
-                        <img alt="Background" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCx-s0YqP8g9C5d34MxWz9MIw579M7EDYidYzOfRfcAECHtrLfrLehOWfWPfYNTBIZAoWNmAJlzY9jTNXZA-hz1KmNEgC8O5GiYlt5l46ryaFmiEbnKT95gT5fdSVcaLciDk8Jc12z791Hu5zdJ4ZWqZpCwpL-YGZHvxw6nOmcZlR7Chx6ZA1YKpVMHyHlWlk9_baKizIMq3HGoJ1DFhkvFi8P-A3SeXaAagyuwOdlN2wIjZrZ_htxnLObDdZYNBA1rIHnIkVg1HJk"/>
-                    </div>
-                    <div class="relative z-10 max-w-xl">
-                        <span class="text-accent bg-black/20 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase mb-4 inline-block">Institutional Control</span>
-                        <h1 class="text-4xl font-black text-white tracking-tighter mb-3 leading-tight" data-i18n="hero_title">Khởi nguồn tăng trưởng, mỗi ngày.</h1>
-                        <p class="text-white/80 text-sm max-w-md" data-i18n="hero_desc">Quản trị thời gian thực chuyên biệt cho chuyên gia nhân sự và các đội ngũ xử lý hồ sơ cao cấp.</p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:w-72">
-                    <div class="bg-white dark:bg-dark-card p-5 rounded-3xl border border-gray-100 dark:border-dark-border">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Engagement</span>
-                            <span class="text-accent font-bold text-lg">88%</span>
-                        </div>
-                        <div class="h-1.5 bg-gray-100 dark:bg-dark-bg rounded-full overflow-hidden">
-                            <div class="h-full bg-accent" style="width: 88%;"></div>
-                        </div>
-                    </div>
-                    <div class="bg-white dark:bg-dark-card p-5 rounded-3xl border border-gray-100 dark:border-dark-border">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Active Users</span>
-                            <span class="text-primary dark:text-accent font-bold text-lg">1,240</span>
-                        </div>
-                        <div class="flex items-center gap-1 text-[10px] text-green-500 font-bold">
-                            <span class="material-symbols-outlined text-xs">trending_up</span>
-                            <span>+12% this month</span>
-                        </div>
-                    </div>
+    <footer class="bg-white dark:bg-dark-bg border-t border-gray-200 dark:border-dark-border pt-12 pb-6 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 text-center md:text-left">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-10 mb-12">
+                <div class="col-span-2">
+                    <span class="text-lg font-black text-primary dark:text-accent block mb-4 uppercase">Inspiring
+                        HR</span>
+                    <p class="text-xs leading-5 text-gray-500 max-w-sm mx-auto md:mx-0">The leading LMS platform for HR
+                        professionals.</p>
                 </div>
             </div>
-
-            <!-- Content Area -->
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- Main Activity -->
-                <div class="md:col-span-2 lg:col-span-3 bg-white dark:bg-dark-card p-6 rounded-3xl border border-gray-100 dark:border-dark-border">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-lg font-bold tracking-tight text-primary dark:text-white" data-i18n="active_curriculums">Giáo trình đang học</h2>
-                        <button class="text-accent text-xs font-bold flex items-center gap-1 hover:underline">
-                            <span data-i18n="all_courses">Tất cả khóa học</span> <span class="material-symbols-outlined text-sm">chevron_right</span>
-                        </button>
-                    </div>
-                    <div id="courses-container" class="grid grid-cols-1 gap-3">
-                        <!-- Placeholder Khóa học -->
-                    </div>
-                </div>
-
-                <!-- Sidebar Tool -->
-                <div class="bg-white dark:bg-dark-card p-6 rounded-3xl border border-gray-100 dark:border-dark-border">
-                    <h3 class="font-bold text-sm text-primary dark:text-white mb-4 uppercase tracking-widest text-[10px]" data-i18n="workflow_tools">Công cụ quy trình</h3>
-                    <div class="space-y-2">
-                        <button class="w-full flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-dark-bg hover:bg-primary hover:text-white dark:hover:bg-accent dark:hover:text-black transition-all text-xs font-semibold group">
-                            <span class="material-symbols-outlined text-lg">add_box</span>
-                            <span data-i18n="create_course">Tạo khóa học</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <p class="text-[10px] text-gray-400 font-medium text-center">© 2024 Inspiring HR. All rights reserved.</p>
         </div>
-    </main>
-</div>
+    </footer>
 
-<footer class="bg-white dark:bg-dark-bg border-t border-gray-200 dark:border-dark-border pt-12 pb-6 relative z-10">
-    <div class="max-w-7xl mx-auto px-6 text-center md:text-left">
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-10 mb-12">
-            <div class="col-span-2">
-                <span class="text-lg font-black text-primary dark:text-accent block mb-4 uppercase">Inspiring HR</span>
-                <p class="text-xs leading-5 text-gray-500 max-w-sm mx-auto md:mx-0">The leading LMS platform for HR professionals.</p>
-            </div>
-        </div>
-        <p class="text-[10px] text-gray-400 font-medium text-center">© 2024 Inspiring HR. All rights reserved.</p>
-    </div>
-</footer>
-
-<script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/main.js"></script>
 </body>
+
 </html>
