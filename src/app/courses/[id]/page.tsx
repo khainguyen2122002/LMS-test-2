@@ -1,4 +1,5 @@
 import React from 'react'
+export const dynamic = 'force-dynamic'
 import Link from 'next/link'
 import { ArrowLeft, BookOpen, Clock, Users, PlayCircle, Lock, CheckCircle } from 'lucide-react'
 import { getCourseDetails } from '@/lib/course-service'
