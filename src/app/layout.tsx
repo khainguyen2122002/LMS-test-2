@@ -9,6 +9,7 @@ import { dashboardContent } from "@/lib/content";
 import { Toaster } from 'sonner'
 import { SettingsProvider } from '@/components/settings/SettingsProvider'
 import { MaintenanceBanner } from '@/components/settings/MaintenanceBanner'
+import { UserProvider } from '@/components/users/UserProvider'
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -26,13 +27,15 @@ function AppShell({ children }: { children: React.ReactNode }) {
     <SettingsProvider>
       <AuthProvider>
         <ThemeProvider>
-          <NotificationProvider>
-            <MaintenanceBanner />
-            <LayoutWrapper sidebarContent={dashboardContent.sidebar} topNavContent={dashboardContent.topNav}>
-              {children}
-            </LayoutWrapper>
-            <Toaster position="bottom-right" richColors theme="system" />
-          </NotificationProvider>
+          <UserProvider>
+            <NotificationProvider>
+              <MaintenanceBanner />
+              <LayoutWrapper sidebarContent={dashboardContent.sidebar} topNavContent={dashboardContent.topNav}>
+                {children}
+              </LayoutWrapper>
+              <Toaster position="bottom-right" richColors theme="system" />
+            </NotificationProvider>
+          </UserProvider>
         </ThemeProvider>
       </AuthProvider>
     </SettingsProvider>

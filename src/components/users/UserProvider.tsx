@@ -30,6 +30,7 @@ interface UserContextValue {
   addUser: (userData: Partial<User>) => Promise<void>
   updateUser: (id: string, userData: Partial<User>) => Promise<void>
   deleteUser: (id: string) => Promise<void>
+  resetToDefault: () => Promise<void>
 }
 
 const UserContext = createContext<UserContextValue | null>(null)
@@ -58,12 +59,31 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true)
     const data = await getAllUsers()
     setUsers(data)
+    localStorage.setItem('inspiring_hr_users', JSON.stringify(data))
     setLoading(false)
   }, [])
 
+  // 1. Initial Load: Try localStorage first
   useEffect(() => {
-    refreshUsers()
+    const saved = localStorage.getItem('inspiring_hr_users')
+    if (saved) {
+      try {
+        setUsers(JSON.parse(saved))
+        setLoading(false)
+      } catch (e) {
+        refreshUsers()
+      }
+    } else {
+      refreshUsers()
+    }
   }, [refreshUsers])
+
+  // 2. Persistence: Save state on every change
+  useEffect(() => {
+    if (users.length > 0) {
+      localStorage.setItem('inspiring_hr_users', JSON.stringify(users))
+    }
+  }, [users])
 
   // Compute derived state
   const { 
@@ -149,6 +169,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     toast.success('Đã xóa người dùng!')
   }
 
+  const resetToDefault = async () => {
+    localStorage.removeItem('inspiring_hr_users')
+    await refreshUsers()
+    toast.info('Đã khôi phục dữ liệu gốc từ hệ thống.')
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -172,7 +198,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         addManyUsers,
         addUser,
         updateUser,
-        deleteUser
+        deleteUser,
+        resetToDefault
       }}
     >
       {children}
