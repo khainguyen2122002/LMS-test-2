@@ -73,10 +73,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     teacherCount, 
     adminCount 
   } = useMemo(() => {
-    const studentCount = users.filter((u) => u.role === 'learner').length
-    const teacherCount = users.filter((u) => u.role === 'instructor').length
-    const adminCount = users.filter((u) => u.role === 'admin').length
-    const totalUsersCount = users.length
+    const studentCount = users.filter((u) => u.role === 'learner' && u.status === 'Hoạt động').length
+    const teacherCount = users.filter((u) => u.role === 'instructor' && u.status === 'Hoạt động').length
+    const adminCount = users.filter((u) => u.role === 'admin' && u.status === 'Hoạt động').length
+    const totalUsersCount = users.filter((u) => u.status === 'Hoạt động').length
 
     // Filter logic
     let temp = users

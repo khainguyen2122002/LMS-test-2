@@ -12,8 +12,9 @@ import {
   HelpCircle,
   LucideIcon
 } from 'lucide-react'
-import { DashboardContent } from '@/lib/content'
 import { useSettings } from '@/components/settings/SettingsProvider'
+import { useAuth } from '@/hooks/useAuth'
+import { DashboardContent } from '@/lib/content'
 
 interface NavItem {
   icon: LucideIcon
@@ -37,6 +38,13 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ content }) => {
   const pathname = usePathname()
   const { config } = useSettings()
+  const { profile } = useAuth()
+
+  const roleLabelVN = {
+    admin: 'Quản trị viên',
+    instructor: 'Giảng viên',
+    learner: 'Học viên'
+  }
 
   return (
     <aside
@@ -85,17 +93,36 @@ export const Sidebar: React.FC<SidebarProps> = ({ content }) => {
         })}
       </nav>
 
-      {/* Admin User Card */}
-      <div className="px-4 mt-4">
-        <div className="dark:bg-neutral-800/50 light:bg-neutral-100 p-4 rounded-xl flex items-center gap-3 transition-colors">
-          <img
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeagBNV8w8jJ6UB6Bdyc_N6TqVGoIgDnKaFYbdg_TUjjM3gTOCMLZqj8y_E9rMd90Ife-XH-3r35BMZkrGMFUhdCU8aMm8FONLwmZ4-bFzAGVX6CYrCias7ydqxdKA7xCP5nVQSmrD7Kdg1j_5JzMAm4IieUGnEfM9ZhwcbpsR_Hv8iGfZv6ZbI09DlLj2T3C88mw0l69sQiqIfCnIvOegbFqWWFV9VvtkHg2xP4oFXXPXGJGGGs5X3hSRfReSt2dWhw2QCzfVm80"
-            alt="Admin Avatar"
-            className="w-10 h-10 rounded-full dark:border-neutral-700 light:border-neutral-200 border flex-shrink-0"
-          />
+      {/* Admin User Card (Dynamic) */}
+      <div className="px-4 mt-auto mb-2 pt-4 border-t border-[var(--border)]">
+        <div className="dark:bg-[#1a1a1a] light:bg-neutral-100 p-3 rounded-2xl flex items-center gap-3 transition-all hover:bg-[var(--input-bg)] group cursor-pointer border border-[var(--border)]">
+          <div className="relative flex-shrink-0">
+            {profile?.avatar ? (
+              <img
+                src={profile.avatar}
+                alt={profile.fullName}
+                className="w-10 h-10 rounded-full object-cover border border-[var(--border)] shadow-sm group-hover:scale-105 transition-transform"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#1B4D2E] to-[#0A2F1A] border border-[var(--border)] flex items-center justify-center font-bold text-white shadow-sm group-hover:scale-105 transition-transform uppercase tracking-tighter text-xs">
+                {profile?.fullName?.split(' ').pop()?.charAt(0) || 'A'}
+              </div>
+            )}
+            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-sidebar-bg rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+          </div>
+          
           <div className="overflow-hidden">
-            <p className="text-sm font-semibold truncate dark:dark:text-white light:text-neutral-900 light:text-neutral-900">{content.user.role}</p>
-            <p className="text-[10px] dark:text-neutral-500 light:dark:text-neutral-400 light:text-neutral-500 truncate">admin@inspiringhr.vn</p>
+            <p className="text-xs font-bold truncate dark:text-white light:text-neutral-900 leading-tight">
+              {profile?.fullName || 'Người dùng'}
+            </p>
+            <div className="flex items-center gap-1.5 mt-0.5">
+                <span className="text-[9px] font-black uppercase tracking-widest text-[#F9A825] bg-[#F9A825]/10 px-1 py-0.5 rounded leading-none">
+                    {profile ? roleLabelVN[profile.role as keyof typeof roleLabelVN] : 'Admin'}
+                </span>
+            </div>
+            <p className="text-[10px] dark:text-neutral-500 light:text-neutral-400 truncate mt-1">
+                {profile?.email || 'admin@inspiringhr.vn'}
+            </p>
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { useUsers, FilterType } from '@/components/users/UserProvider'
 import type { User } from '@/lib/user-service'
 import { UserFormModal } from './modals/UserFormModal'
 import { ConfirmDeleteModal } from './modals/ConfirmDeleteModal'
+import { ConfirmStatusModal } from './modals/ConfirmStatusModal'
 
 // Predefined tabs
 const FILTERS: FilterType[] = ['Tất cả', 'Học viên', 'Giảng viên', 'Admin', 'Hoạt động', 'Ngừng hoạt động']
@@ -31,6 +32,7 @@ export const UserTable: React.FC = () => {
     paginatedUsers,
     filteredUsers,
     totalPages,
+    updateUser,
   } = useUsers()
 
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null)
@@ -41,6 +43,9 @@ export const UserTable: React.FC = () => {
   
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [userToDelete, setUserToDelete] = useState<User | null>(null)
+
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false)
+  const [userForStatus, setUserForStatus] = useState<User | null>(null)
 
   const handleEdit = (user: User) => {
     setUserToEdit(user)
@@ -58,6 +63,20 @@ export const UserTable: React.FC = () => {
     // Logic delete sẽ được cập nhật sau trong UserProvider
     setIsDeleteModalOpen(false)
     setUserToDelete(null)
+  }
+
+  const handleStatusChange = (user: User) => {
+    setUserForStatus(user)
+    setIsStatusModalOpen(true)
+  }
+
+  const confirmStatusChange = async () => {
+    if (userForStatus) {
+      const nextStatus = userForStatus.status === 'Hoạt động' ? 'Ngừng hoạt động' : 'Hoạt động'
+      await updateUser(userForStatus.id, { status: nextStatus })
+      setIsStatusModalOpen(false)
+      setUserForStatus(null)
+    }
   }
 
   return (
@@ -164,19 +183,28 @@ export const UserTable: React.FC = () => {
                   {/* Join Date */}
                   <td className="px-6 py-4 text-sm dark:text-neutral-400 light:text-neutral-500">{user.joinDate}</td>
 
-                  {/* Status */}
+                  {/* Status Toggle */}
                   <td className="px-6 py-4">
-                    {user.status === 'Hoạt động' ? (
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                        <span className="text-xs font-medium text-emerald-400">Hoạt động</span>
+                    <button
+                      onClick={() => handleStatusChange(user)}
+                      className="group/status relative flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-neutral-800/50 transition-all cursor-pointer"
+                    >
+                      {user.status === 'Hoạt động' ? (
+                        <>
+                          <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] group-hover/status:scale-110 transition-transform" />
+                          <span className="text-xs font-medium text-emerald-400">Hoạt động</span>
+                        </>
+                      ) : (
+                        <>
+                          <div className="w-2 h-2 rounded-full bg-neutral-600 group-hover/status:scale-110 transition-transform" />
+                          <span className="text-xs font-medium text-neutral-500">Ngừng hoạt động</span>
+                        </>
+                      )}
+                      {/* Hover Tooltip */}
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-neutral-800 text-[9px] text-white rounded opacity-0 group-hover/status:opacity-100 whitespace-nowrap pointer-events-none transition-opacity font-bold uppercase tracking-widest border border-white/5">
+                        Click để đổi trạng thái
                       </div>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-neutral-600" />
-                        <span className="text-xs font-medium text-neutral-500">Ngừng hoạt động</span>
-                      </div>
-                    )}
+                    </button>
                   </td>
 
                   {/* Actions */}
@@ -254,6 +282,13 @@ export const UserTable: React.FC = () => {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={executeDelete}
         user={userToDelete}
+      />
+
+      <ConfirmStatusModal
+        isOpen={isStatusModalOpen}
+        onClose={() => setIsStatusModalOpen(false)}
+        onConfirm={confirmStatusChange}
+        user={userForStatus}
       />
     </div>
   )
