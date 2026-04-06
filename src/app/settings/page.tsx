@@ -9,6 +9,7 @@ import { SecuritySettings } from '@/components/settings/SecuritySettings'
 import { RoleManagement } from '@/components/settings/RoleManagement'
 import { EmailTemplates } from '@/components/settings/EmailTemplates'
 import { IntegrationsList } from '@/components/settings/IntegrationsList'
+import { HeroSectionEditor } from '@/components/settings/HeroSectionEditor' // Added
 import { useSettings } from '@/components/settings/SettingsProvider'
 
 export default function SettingsPage() {
@@ -67,10 +68,11 @@ export default function SettingsPage() {
               <ToggleCards />
             </>
           )}
-          {activeTab === 1 && <RoleManagement />}
-          {activeTab === 2 && <EmailTemplates />}
-          {activeTab === 3 && <IntegrationsList />}
-          {activeTab === 4 && <SecuritySettings />}
+          {activeTab === 1 && <HeroSectionEditor />}
+          {activeTab === 2 && <RoleManagement />}
+          {activeTab === 3 && <EmailTemplates />}
+          {activeTab === 4 && <IntegrationsList />}
+          {activeTab === 5 && <SecuritySettings />}
         </div>
       </div>
     </div>

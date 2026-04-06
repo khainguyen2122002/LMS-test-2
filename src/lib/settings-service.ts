@@ -34,6 +34,11 @@ export interface SystemConfig {
   roles: SystemRole[]
   emailTemplates: EmailTemplate[]
   integrations: SystemIntegration[]
+  heroTag: string
+  heroHeadline: string
+  heroSubtitle: string
+  heroBgColor: string
+  heroImageUrl?: string
 }
 
 export const defaultSystemConfig: SystemConfig = {
@@ -63,5 +68,10 @@ export const defaultSystemConfig: SystemConfig = {
     { id: 'i3', name: 'Lớp học trực tuyến', provider: 'Zoom / Google Meet', isEnabled: true, config: { clientId: 'zoom-client-****', clientSecret: '******' } },
     { id: 'i4', name: 'Lịch biểu', provider: 'Google Calendar', isEnabled: false, config: { serviceAccount: 'service@****.iam.gserviceaccount.com' } },
     { id: 'i5', name: 'Push Notification', provider: 'Firebase FCM', isEnabled: true, config: { serverKey: 'AAAA*******' } },
-  ]
+  ],
+  heroTag: 'INSTITUTIONAL CONTROL',
+  heroHeadline: 'Khởi nguồn tăng trưởng, mỗi ngày.',
+  heroSubtitle: 'Hệ thống học tập tối ưu hóa năng suất và chuẩn hóa quy trình đào tạo nhân sự cho doanh nghiệp hiện đại.',
+  heroBgColor: '#1B4D2E',
+  heroImageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDxe138vAZERkIg-n7LuWaVBotfcHb_3llc6vUb3QxLyALXfm-t_YzfEJtDjrbidNAOqaIHHN5gFsOxLOjpeOcZfzQe0yGEc6YvZzkvhSBGk0qnb41dEwurtEwpMC2SkPMYNQrlQWg727g_Pr4XwHLStf5VwZ1p4PH84Dtg67EUcsO41azoz9sZDpSd9_EPZoyuNOQRCZuW7LXYsQM6hcjwtdDE55stK5m-y6BgtjOzd2CDwDiFCSN4hmakMl1v0sOPWMIO8n1tats',
 }

@@ -57,7 +57,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ content }) => {
             <h1 className="text-xl font-bold text-[#F9A825] uppercase tracking-tight leading-none truncate" title={config.platformName}>
               {config.platformName}
             </h1>
-            <p className="text-[10px] dark:text-neutral-500 light:text-neutral-500 font-medium tracking-widest uppercase mt-0.5 truncate" title={config.slogan}>
+            <p className="text-[10px] dark:text-neutral-500 light:text-neutral-500 font-medium tracking-widest uppercase mt-0.5 line-clamp-2" title={config.slogan}>
               {config.slogan}
             </p>
           </div>

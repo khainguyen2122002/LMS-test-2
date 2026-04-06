@@ -36,6 +36,8 @@ export interface Course {
   certified?: boolean
   certLabel?: string // Sẽ ánh xạ từ cert_label trong DB
   price?: number
+  youtube_url?: string
+  attachments?: Array<{ name: string, url: string, type: string, size: number }>
 
   // Computed client-side fields representing relations
   total_lessons?: number
@@ -75,6 +77,8 @@ export async function getAllCourses(): Promise<Course[]> {
     certified: course.certified,
     certLabel: course.cert_label,
     price: course.price,
+    youtube_url: course.youtube_url,
+    attachments: course.attachments || [],
     total_lessons: course.lessons?.length || 0,
     completed_lessons: 0,
   }))
@@ -128,6 +132,8 @@ export async function createCourse(courseData: Partial<Course>) {
       instructor_id: user.id,
       category: courseData.category,
       is_published: courseData.is_published,
+      youtube_url: courseData.youtube_url,
+      attachments: courseData.attachments || [],
     })
     .select()
 

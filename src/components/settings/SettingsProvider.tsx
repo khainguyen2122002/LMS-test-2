@@ -36,10 +36,16 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         // Fallback merge to avoid undefined array crashes on old caches
         const safeMerged = { ...defaultSystemConfig, ...parsed }
         
-        // Specifically guard arrays against being completely omitted in old cache
+        // Specifically guard arrays and new fields against being completely omitted in old cache
         if (!parsed.roles) safeMerged.roles = defaultSystemConfig.roles
         if (!parsed.emailTemplates) safeMerged.emailTemplates = defaultSystemConfig.emailTemplates
         if (!parsed.integrations) safeMerged.integrations = defaultSystemConfig.integrations
+        
+        // Ensure hero fields exist
+        if (!parsed.heroTag) safeMerged.heroTag = defaultSystemConfig.heroTag
+        if (!parsed.heroHeadline) safeMerged.heroHeadline = defaultSystemConfig.heroHeadline
+        if (!parsed.heroSubtitle) safeMerged.heroSubtitle = defaultSystemConfig.heroSubtitle
+        if (!parsed.heroBgColor) safeMerged.heroBgColor = defaultSystemConfig.heroBgColor
 
         setConfig(safeMerged)
         setDraftConfig(safeMerged)

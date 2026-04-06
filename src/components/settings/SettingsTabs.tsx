@@ -1,10 +1,11 @@
 "use client"
 
 import React, { useState } from 'react'
-import { Info, ShieldCheck, Mail, Plug, Lock } from 'lucide-react'
+import { Info, ShieldCheck, Mail, Plug, Lock, Layout } from 'lucide-react'
 
 const TABS = [
   { icon: Info, label: 'Thông tin nền tảng' },
+  { icon: Layout, label: 'Giao diện Dashboard' },
   { icon: ShieldCheck, label: 'Quản lý vai trò & quyền' },
   { icon: Mail, label: 'Email template' },
   { icon: Plug, label: 'Tích hợp bên thứ ba' },
