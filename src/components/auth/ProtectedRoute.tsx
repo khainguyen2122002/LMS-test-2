@@ -32,7 +32,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowe
         if (role === 'learner') {
           router.replace('/student/dashboard')
         } else {
-          router.replace('/admin')
+          router.replace('/admin/dashboard')
         }
         return
       }
