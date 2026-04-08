@@ -12,7 +12,7 @@ export interface MyCourseCardProps {
   lessonsLeft?: number
   totalLessons?: number
   imageUrl: string
-  state: 'learning' | 'finished' | 'empty'
+  state: 'learning' | 'finished' | 'empty' | 'not_started'
 }
 
 export const MyCourseCard: React.FC<MyCourseCardProps> = ({
