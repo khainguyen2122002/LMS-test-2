@@ -21,10 +21,13 @@ export const LayoutWrapper: React.FC<LayoutWrapperProps> = ({
   
   // Routes where sidebar/navbar should be hidden
   const isAuthPage = pathname === '/login'
+  const isStudentPage = pathname.startsWith('/student')
+  const isLearnPage = pathname.startsWith('/learn')
+  const isPublicHome = pathname === '/'
 
-  if (isAuthPage) {
+  if (isAuthPage || isStudentPage || isLearnPage || isPublicHome) {
     return (
-      <div className="min-h-screen bg-surface">
+      <div className="min-h-screen bg-[var(--background)]">
         {children}
       </div>
     )

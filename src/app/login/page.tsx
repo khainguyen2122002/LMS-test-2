@@ -37,7 +37,11 @@ export default function LoginPage() {
       const profile = await getCurrentUser()
 
       if (profile?.role === 'admin') {
-        router.push('/users')
+        router.push('/admin')
+      } else if (profile?.role === 'instructor') {
+        router.push('/admin')
+      } else if (profile?.role === 'learner') {
+        router.push('/student/dashboard')
       } else {
         router.push('/')
       }
