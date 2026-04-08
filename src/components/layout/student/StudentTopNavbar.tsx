@@ -1,12 +1,11 @@
 "use client"
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Search, Moon, Sun, Bell } from 'lucide-react'
-import { useTheme } from 'next-themes'
 import { useAuth } from '@/hooks/useAuth'
 
 export const StudentTopNavbar: React.FC = () => {
-  const { theme, setTheme } = useTheme()
+  const [isDark, setIsDark] = useState(true)
   const { profile } = useAuth()
   
   // Use user name or fallback
@@ -14,8 +13,18 @@ export const StudentTopNavbar: React.FC = () => {
   // Provide initial K or first letter
   const userInitials = userName.charAt(0).toUpperCase()
 
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains('dark'))
+  }, [])
+
   const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark')
+    if (isDark) {
+      document.documentElement.classList.remove('dark')
+      setIsDark(false)
+    } else {
+      document.documentElement.classList.add('dark')
+      setIsDark(true)
+    }
   }
 
   return (
@@ -37,7 +46,7 @@ export const StudentTopNavbar: React.FC = () => {
             onClick={toggleTheme}
             className="p-2 hover:bg-[#edeee9] dark:hover:bg-[#2a2a2a] rounded-full transition-colors text-neutral-600 dark:text-neutral-300"
           >
-            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            {isDark ? <Sun size={20} /> : <Moon size={20} />}
           </button>
           
           <button className="p-2 hover:bg-[#edeee9] dark:hover:bg-[#2a2a2a] rounded-full transition-colors relative text-neutral-600 dark:text-neutral-300">
