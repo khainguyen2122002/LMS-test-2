@@ -24,8 +24,9 @@ export const LayoutWrapper: React.FC<LayoutWrapperProps> = ({
   const isStudentPage = pathname.startsWith('/student')
   const isLearnPage = pathname.startsWith('/learn')
   const isPublicHome = pathname === '/'
+  const isPublicCourses = pathname === '/courses'
 
-  if (isAuthPage || isStudentPage || isLearnPage || isPublicHome) {
+  if (isAuthPage || isStudentPage || isLearnPage || isPublicHome || isPublicCourses) {
     return (
       <div className="min-h-screen bg-[var(--background)]">
         {children}

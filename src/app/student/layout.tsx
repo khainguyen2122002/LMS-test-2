@@ -5,7 +5,7 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 
 export default function StudentLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ProtectedRoute allowedRoles={['learner', 'admin']}>
+    <ProtectedRoute allowedRoles={['learner']}>
       <div className="flex min-h-screen text-[var(--foreground)]" style={{ background: 'var(--background)' }}>
       {/* Fixed Sidebar - 280px */}
       <StudentSidebar />

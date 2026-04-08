@@ -28,7 +28,7 @@ const navItems: NavItem[] = [
   { icon: GraduationCap, label: 'Khóa học', href: '/admin/courses' },
   { icon: BarChart3, label: 'Báo cáo', href: '/admin/reports' },
   { icon: Settings, label: 'Cài đặt hệ thống', href: '/admin/settings' },
-  { icon: HelpCircle, label: 'Hỗ trợ', href: '/support' }, // support might not be protected, or let's keep it admin/support? Actually just leave it as /support. Wait, user said instructor doesn't see Báo Cáo and Cài Đặt.
+  { icon: HelpCircle, label: 'Hỗ trợ', href: '/support' },
 ]
 
 interface SidebarProps {
