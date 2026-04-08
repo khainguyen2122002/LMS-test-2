@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
-import { Sparkles, ArrowRight, TrendingUp, CheckCircle, Award, MessageSquare, Support, HeadphonesIcon } from 'lucide-react'
+import { Sparkles, ArrowRight, TrendingUp, CheckCircle, Award, MessageSquare, HeadphonesIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
 
