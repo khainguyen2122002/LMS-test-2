@@ -1,16 +1,31 @@
 "use client"
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { useParams } from 'next/navigation'
+import Link from 'next/link'
 import { LearningSidebar } from '@/components/learning/LearningSidebar'
 import { LearningTopNav } from '@/components/learning/LearningTopNav'
 import { LearningVideoPlayer } from '@/components/learning/LearningVideoPlayer'
 import { LearningRightPanel } from '@/components/learning/LearningRightPanel'
 import { CourseData, Note } from '@/components/learning/types'
+import { checkEnrollment } from '@/lib/enrollment-service'
+import { Lock, Home, Loader2 } from 'lucide-react'
 
 export default function LearningViewPage() {
   const params = useParams()
-  // ID is params.id
+  const courseId = params.id as string
+
+  const [enrollmentChecked, setEnrollmentChecked] = useState(false)
+  const [hasAccess, setHasAccess] = useState(false)
+
+  useEffect(() => {
+    const verify = async () => {
+      const enrolled = await checkEnrollment(courseId)
+      setHasAccess(enrolled)
+      setEnrollmentChecked(true)
+    }
+    verify()
+  }, [courseId])
 
   // Realistic mock data matching HTML
   const [course, setCourse] = useState<CourseData>({
@@ -102,6 +117,40 @@ export default function LearningViewPage() {
 
   const handleDeleteNote = (id: string) => {
     setNotes(prev => prev.filter(n => n.id !== id))
+  }
+
+  if (!enrollmentChecked) {
+    return (
+      <div className="min-h-screen bg-[#111111] flex items-center justify-center">
+        <Loader2 className="w-10 h-10 animate-spin text-[#ffb957]" />
+      </div>
+    )
+  }
+
+  if (!hasAccess) {
+    return (
+      <div className="min-h-screen bg-[#111111] flex flex-col items-center justify-center text-white text-center px-4">
+        <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mb-6">
+          <Lock className="w-10 h-10 text-[#ffb957]" />
+        </div>
+        <h1 className="text-2xl font-bold mb-3">Bạn chưa được cấp quyền truy cập</h1>
+        <p className="text-white/60 text-sm max-w-sm mb-8">
+          Vui lòng liên hệ Quản trị viên để được cấp quyền vào khóa học này.
+        </p>
+        <div className="flex gap-4">
+          <Link href="/student/courses">
+            <button className="px-6 py-3 bg-[#1B4D2E] hover:bg-[#205e38] text-white font-bold rounded-full transition-colors">
+              Khóa học của tôi
+            </button>
+          </Link>
+          <Link href="/courses">
+            <button className="px-6 py-3 bg-white/10 hover:bg-white/15 text-white font-bold rounded-full flex items-center gap-2 transition-colors">
+              <Home className="w-4 h-4" /> Trang khóa học
+            </button>
+          </Link>
+        </div>
+      </div>
+    )
   }
 
   if (!course) return <div className="p-8 text-white">Loading...</div>
