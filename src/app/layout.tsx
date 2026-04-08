@@ -18,16 +18,18 @@ export const metadata: Metadata = {
   description: "Hệ thống quản trị năng lực và phát triển nhân sự toàn diện",
 };
 
+import QueryProvider from '@/components/providers/QueryProvider'
 import { AuthProvider } from '@/components/auth/AuthProvider'
 import { LayoutWrapper } from '@/components/layout/LayoutWrapper'
 
 // Inner layout that uses client-side providers
 function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <SettingsProvider>
-      <AuthProvider>
-        <ThemeProvider>
-          <UserProvider>
+    <QueryProvider>
+      <SettingsProvider>
+        <AuthProvider>
+          <ThemeProvider>
+            <UserProvider>
             <NotificationProvider>
               <MaintenanceBanner />
               <LayoutWrapper sidebarContent={dashboardContent.sidebar} topNavContent={dashboardContent.topNav}>
@@ -39,6 +41,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
         </ThemeProvider>
       </AuthProvider>
     </SettingsProvider>
+  </QueryProvider>
   );
 }
 

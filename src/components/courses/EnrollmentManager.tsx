@@ -1,8 +1,15 @@
 "use client"
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Search, UserPlus, Trash2, Loader2, Users, CheckCircle2, X } from 'lucide-react'
-import { getCourseEnrollees, searchLearners, enrollStudent, unenrollStudent, Enrollment } from '@/lib/enrollment-service'
+import { 
+  getCourseEnrollees, 
+  searchLearners, 
+  enrollStudent, 
+  unenrollStudent, 
+  Enrollment 
+} from '@/lib/enrollment-service'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
 interface EnrollmentManagerProps {
@@ -12,70 +19,65 @@ interface EnrollmentManagerProps {
 }
 
 export const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({ courseId, courseTitle, onClose }) => {
-  const [enrollees, setEnrollees] = useState<Enrollment[]>([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [searchResults, setSearchResults] = useState<any[]>([])
-  const [loadingEnrollees, setLoadingEnrollees] = useState(true)
-  const [searching, setSearching] = useState(false)
-  const [enrolling, setEnrolling] = useState<string | null>(null)
-  const [removing, setRemoving] = useState<string | null>(null)
+  const queryClient = useQueryClient()
 
-  const fetchEnrollees = useCallback(async () => {
-    setLoadingEnrollees(true)
-    const data = await getCourseEnrollees(courseId)
-    setEnrollees(data)
-    setLoadingEnrollees(false)
-  }, [courseId])
+  // 1. Fetch Enrolled Students
+  const { 
+    data: enrollees = [], 
+    isLoading: loadingEnrollees 
+  } = useQuery({
+    queryKey: ['enrollees', courseId],
+    queryFn: () => getCourseEnrollees(courseId),
+    staleTime: 1000 * 30, // 30 seconds
+  })
 
-  useEffect(() => { fetchEnrollees() }, [fetchEnrollees])
+  // 2. Search Students (Real-time with Query)
+  const { 
+    data: searchResults = [], 
+    isFetching: searching,
+    isError: searchError
+  } = useQuery({
+    queryKey: ['searchLearners', searchQuery],
+    queryFn: () => searchLearners(searchQuery),
+    enabled: searchQuery.trim().length > 1,
+    staleTime: 1000 * 60, // 1 minute cache for search results
+  })
 
-  // Debounced search
-  useEffect(() => {
-    if (!searchQuery.trim()) { setSearchResults([]); return }
-    const timer = setTimeout(async () => {
-      setSearching(true)
-      const results = await searchLearners(searchQuery)
-      setSearchResults(results)
-      setSearching(false)
-    }, 400)
-    return () => clearTimeout(timer)
-  }, [searchQuery])
-
-  const handleEnroll = async (userId: string, userName: string) => {
-    setEnrolling(userId)
-    try {
-      await enrollStudent(userId, courseId)
-      toast.success(`Đã cấp quyền cho ${userName}`)
+  // 3. Enroll Mutation
+  const enrollMutation = useMutation({
+    mutationFn: ({ userId }: { userId: string; userName: string }) => 
+      enrollStudent(userId, courseId),
+    onSuccess: (_, variables) => {
+      toast.success(`Đã cấp quyền cho ${variables.userName}`)
+      queryClient.invalidateQueries({ queryKey: ['enrollees', courseId] })
       setSearchQuery('')
-      setSearchResults([])
-      await fetchEnrollees()
-    } catch (err: any) {
+    },
+    onError: (err: any) => {
       toast.error(err.message || 'Lỗi khi cấp quyền')
-    } finally {
-      setEnrolling(null)
     }
-  }
+  })
 
-  const handleUnenroll = async (enrollmentId: string, userName: string) => {
-    setRemoving(enrollmentId)
-    try {
-      await unenrollStudent(enrollmentId)
-      toast.success(`Đã thu hồi quyền của ${userName}`)
-      await fetchEnrollees()
-    } catch {
+  // 4. Unenroll Mutation
+  const unenrollMutation = useMutation({
+    mutationFn: ({ enrollmentId }: { enrollmentId: string; userName: string | undefined }) => 
+      unenrollStudent(enrollmentId),
+    onSuccess: (_, variables) => {
+      toast.success(`Đã thu hồi quyền của ${variables.userName || 'học viên'}`)
+      queryClient.invalidateQueries({ queryKey: ['enrollees', courseId] })
+    },
+    onError: () => {
       toast.error('Lỗi khi thu hồi quyền')
-    } finally {
-      setRemoving(null)
     }
-  }
+  })
 
-  const enrolledIds = new Set(enrollees.map(e => e.user_id))
+  const enrolledIds = useMemo(() => new Set(enrollees.map(e => e.user_id)), [enrollees])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
       <div className="dark:bg-[#1c1b1b] bg-white border border-[var(--border)] rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
         {/* Header */}
-        <div className="px-6 py-4 flex justify-between items-start border-b border-[var(--border)] flex-shrink-0">
+        <div className="px-6 py-4 flex justify-between items-start border-b border-[var(--border)] flex-shrink-0 bg-white dark:bg-[#1c1b1b]">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <Users size={18} className="text-[#1B4D2E] dark:text-[#9ed3aa]" />
@@ -88,111 +90,137 @@ export const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({ courseId, 
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-6 space-y-8 scrollbar-hide">
           {/* Search & Grant Access */}
-          <div>
-            <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-3">Cấp quyền truy cập</h3>
+          <section className="space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-1">Cấp quyền truy cập</h3>
             <div className="relative">
               <Search size={16} className="absolute left-3 top-3 text-neutral-500" />
               <input
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 placeholder="Tìm học viên theo tên hoặc email..."
-                className="w-full pl-9 pr-4 py-2.5 bg-[var(--input-bg)] border border-[var(--border)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#1B4D2E]/50 dark:text-white"
+                className="w-full pl-9 pr-4 py-2.5 bg-[var(--input-bg)] border border-[var(--border)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#1B4D2E]/50 dark:text-white transition-all"
               />
               {searching && <Loader2 size={16} className="absolute right-3 top-3 text-neutral-500 animate-spin" />}
             </div>
 
-            {/* Search Results */}
-            {searchResults.length > 0 && (
-              <div className="mt-2 bg-[var(--input-bg)] border border-[var(--border)] rounded-xl overflow-hidden divide-y divide-[var(--border)]">
-                {searchResults.map(user => {
-                  const isEnrolled = enrolledIds.has(user.id)
-                  return (
-                    <div key={user.id} className="flex items-center justify-between px-4 py-3 hover:bg-white/5">
+            {/* Search Results with Skeleton */}
+            {searchQuery.trim().length > 1 && (
+              <div className="bg-[var(--input-bg)] border border-[var(--border)] rounded-xl overflow-hidden divide-y divide-[var(--border)]">
+                {searching ? (
+                  Array.from({ length: 2 }).map((_, i) => (
+                    <div key={i} className="flex items-center justify-between px-4 py-3 animate-pulse">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#1B4D2E] flex items-center justify-center text-white text-xs font-bold">
-                          {user.full_name?.charAt(0) || '?'}
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold dark:text-white">{user.full_name}</p>
-                          <p className="text-xs text-neutral-500">{user.email}</p>
+                        <div className="w-8 h-8 rounded-full bg-neutral-200 dark:bg-neutral-800" />
+                        <div className="space-y-1">
+                          <div className="h-3 w-24 bg-neutral-200 dark:bg-neutral-800 rounded" />
+                          <div className="h-2 w-32 bg-neutral-200 dark:bg-neutral-800 rounded" />
                         </div>
                       </div>
-                      {isEnrolled ? (
-                        <span className="flex items-center gap-1 text-xs text-emerald-500 font-bold">
-                          <CheckCircle2 size={14} /> Đã cấp
-                        </span>
-                      ) : (
-                        <button
-                          onClick={() => handleEnroll(user.id, user.full_name)}
-                          disabled={enrolling === user.id}
-                          className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1B4D2E] hover:bg-[#205e38] text-white text-xs font-bold rounded-lg transition-colors disabled:opacity-50"
-                        >
-                          {enrolling === user.id ? <Loader2 size={12} className="animate-spin" /> : <UserPlus size={12} />}
-                          Cấp quyền
-                        </button>
-                      )}
+                      <div className="h-8 w-20 bg-neutral-200 dark:bg-neutral-800 rounded-lg" />
                     </div>
-                  )
-                })}
+                  ))
+                ) : searchResults.length === 0 ? (
+                  <div className="px-4 py-6 text-center text-sm text-neutral-500">
+                    Không tìm thấy học viên nào với "{searchQuery}"
+                  </div>
+                ) : (
+                  searchResults.map(user => {
+                    const isEnrolled = enrolledIds.has(user.id)
+                    const isEnrolling = enrollMutation.isPending && enrollMutation.variables?.userId === user.id
+                    
+                    return (
+                      <div key={user.id} className="flex items-center justify-between px-4 py-3 hover:bg-[#1B4D2E]/5 transition-colors group">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-[#1B4D2E] flex items-center justify-center text-white text-xs font-bold ring-2 ring-white/10">
+                            {user.full_name?.charAt(0) || '?'}
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold dark:text-white group-hover:text-[#1B4D2E] dark:group-hover:text-[#9ed3aa] transition-colors">{user.full_name}</p>
+                            <p className="text-xs text-neutral-500">{user.email}</p>
+                          </div>
+                        </div>
+                        {isEnrolled ? (
+                          <span className="flex items-center gap-1 text-xs text-emerald-500 font-bold bg-emerald-500/10 px-2 py-1 rounded-full">
+                            <CheckCircle2 size={14} /> Đã cấp
+                          </span>
+                        ) : (
+                          <button
+                            onClick={() => enrollMutation.mutate({ userId: user.id, userName: user.full_name })}
+                            disabled={isEnrolling}
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1B4D2E] hover:bg-[#205e38] text-white text-xs font-bold rounded-lg transition-all shadow-sm hover:shadow-md disabled:opacity-50"
+                          >
+                            {isEnrolling ? <Loader2 size={12} className="animate-spin" /> : <UserPlus size={12} />}
+                            Cấp quyền
+                          </button>
+                        )}
+                      </div>
+                    )
+                  })
+                )}
               </div>
             )}
-          </div>
+          </section>
 
           {/* Enrolled Students List */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
+          <section className="space-y-4">
+            <div className="flex items-center justify-between">
               <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-500">
                 Học viên đã được cấp quyền
               </h3>
-              <span className="text-xs font-bold bg-[#1B4D2E]/20 text-[#9ed3aa] px-2 py-0.5 rounded-full">
+              <span className="text-[10px] font-bold bg-[#1B4D2E]/20 text-[#1B4D2E] dark:text-[#9ed3aa] px-2.5 py-1 rounded-full border border-[#1B4D2E]/20">
                 {enrollees.length} học viên
               </span>
             </div>
 
             {loadingEnrollees ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-[#1B4D2E]" />
+              <div className="space-y-2">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="h-16 w-full bg-neutral-200 dark:bg-neutral-800 rounded-xl animate-pulse" />
+                ))}
               </div>
             ) : enrollees.length === 0 ? (
-              <div className="text-center py-10 text-neutral-500">
-                <Users size={36} className="mx-auto mb-3 opacity-30" />
-                <p className="text-sm">Chưa có học viên nào được cấp quyền</p>
-                <p className="text-xs mt-1">Tìm kiếm bên trên để thêm học viên</p>
+              <div className="text-center py-12 bg-neutral-50 dark:bg-neutral-900/40 rounded-2xl border border-dashed border-[var(--border)]">
+                <Users size={40} className="mx-auto mb-3 text-neutral-300 dark:text-neutral-700" />
+                <p className="text-sm font-medium text-neutral-500">Chưa có học viên nào</p>
+                <p className="text-xs text-neutral-400 mt-1">Tìm kiếm học viên để bắt đầu đào tạo</p>
               </div>
             ) : (
               <div className="space-y-2">
                 {enrollees.map(enrollment => {
                   const user = enrollment.user as any
+                  const isRemoving = unenrollMutation.isPending && unenrollMutation.variables?.enrollmentId === enrollment.id
+
                   return (
-                    <div key={enrollment.id} className="flex items-center justify-between p-3 bg-[var(--input-bg)] rounded-xl border border-[var(--border)] group">
+                    <div key={enrollment.id} className="flex items-center justify-between p-3 bg-white dark:bg-[#1C1B1B] rounded-xl border border-[var(--border)] group hover:border-[#1B4D2E]/30 transition-all shadow-sm">
                       <div className="flex items-center gap-3">
                         {user?.avatar_url ? (
-                          <img src={user.avatar_url} alt="" className="w-9 h-9 rounded-full object-cover" />
+                          <img src={user.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover ring-2 ring-white/5" />
                         ) : (
-                          <div className="w-9 h-9 rounded-full bg-[#1B4D2E] flex items-center justify-center text-white text-xs font-bold">
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#1B4D2E] to-[#205e38] flex items-center justify-center text-white text-sm font-bold shadow-inner">
                             {user?.full_name?.charAt(0) || '?'}
                           </div>
                         )}
                         <div>
-                          <p className="text-sm font-semibold dark:text-white">{user?.full_name}</p>
-                          <p className="text-xs text-neutral-500">{user?.email}</p>
+                          <p className="text-sm font-bold dark:text-white">{user?.full_name}</p>
+                          <p className="text-[11px] text-neutral-500">{user?.email}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
                         <div className="text-right hidden sm:block">
-                          <p className="text-xs font-bold text-[#9ed3aa]">{enrollment.progress_percentage}%</p>
-                          <p className="text-[10px] text-neutral-500">
+                          <p className="text-xs font-bold text-[#1B4D2E] dark:text-[#9ed3aa]">{enrollment.progress_percentage}%</p>
+                          <p className="text-[10px] text-neutral-500 font-medium">
                             {new Date(enrollment.enrolled_at).toLocaleDateString('vi-VN')}
                           </p>
                         </div>
                         <button
-                          onClick={() => handleUnenroll(enrollment.id, user?.full_name)}
-                          disabled={removing === enrollment.id}
-                          className="p-2 text-neutral-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all opacity-0 group-hover:opacity-100 disabled:opacity-50"
+                          onClick={() => unenrollMutation.mutate({ enrollmentId: enrollment.id, userName: user?.full_name })}
+                          disabled={isRemoving}
+                          className="p-2 text-neutral-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all opacity-0 group-hover:opacity-100 disabled:opacity-50"
+                          title="Thu hồi quyền truy cập"
                         >
-                          {removing === enrollment.id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+                          {isRemoving ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
                         </button>
                       </div>
                     </div>
@@ -200,7 +228,7 @@ export const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({ courseId, 
                 })}
               </div>
             )}
-          </div>
+          </section>
         </div>
       </div>
     </div>

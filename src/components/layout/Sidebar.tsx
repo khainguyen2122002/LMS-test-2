@@ -23,7 +23,7 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { icon: LayoutDashboard, label: 'Bảng điều khiển', href: '/admin' },
+  { icon: LayoutDashboard, label: 'Bảng điều khiển', href: '/admin/dashboard' },
   { icon: Users, label: 'Quản lý người dùng', href: '/admin/users' },
   { icon: GraduationCap, label: 'Khóa học', href: '/admin/courses' },
   { icon: BarChart3, label: 'Báo cáo', href: '/admin/reports' },
@@ -35,7 +35,7 @@ interface SidebarProps {
   content: DashboardContent['sidebar']
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ content }) => {
+export const Sidebar: React.FC<SidebarProps> = React.memo(({ content }) => {
   const pathname = usePathname()
   const { config } = useSettings()
   const { profile } = useAuth()
@@ -135,4 +135,4 @@ export const Sidebar: React.FC<SidebarProps> = ({ content }) => {
       </div>
     </aside>
   )
-}
+})
